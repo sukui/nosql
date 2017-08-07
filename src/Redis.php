@@ -65,6 +65,11 @@ class Redis implements Async
 
     public function __call($name, $arguments)
     {
+        $value = (yield getContext("service-chain-value"));
+        if (is_array($value) && isset($value["zan_test"]) && $value["zan_test"] === true) {
+            //压测流量key增加前缀zan_test_
+            $arguments[0] = "zan_test_".$arguments[0];
+        }
         $this->cmd = $name;
         $this->args = $arguments;
         $arguments[] = [$this, 'recv'];

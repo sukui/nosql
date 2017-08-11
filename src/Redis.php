@@ -153,7 +153,7 @@ class Redis implements Async
                 }
 
                 $callback = $this->callback;
-                $ex = new RedisCallTimeoutException("Redis call {$this->cmd} timeout", 0, null, $ctx);
+                $ex = new RedisCallTimeoutException("Redis call {$this->cmd} timeout ".var_export($ctx, true), 0, null, $ctx);
                 if ($this->trace instanceof Trace) {
                     $this->trace->commit($this->traceHandle, $ex);
                 }

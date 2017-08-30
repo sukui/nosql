@@ -89,6 +89,11 @@ class Cache
         $redis = new Redis($conn);
         $realKey = self::getRealKey($config, $keys);
         $result = (yield $redis->$func($realKey, ...$args));
+        
+        $ttl = isset($config['exp']) ? $config['exp'] : 0;
+        if($result && $ttl){
+            yield self::expire($redis, $realKey, $ttl);
+        }
 
         yield self::deleteActiveConnectionFromContext($conn);
         $conn->release();

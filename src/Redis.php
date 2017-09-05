@@ -167,9 +167,8 @@ class Redis implements Async
                 if ($this->trace instanceof Trace) {
                     $this->trace->commit($this->traceHandle, $ex);
                 }
-                $callback(null, $ex);
-
                 $this->callback = null;
+                $callback(null, $ex);
             }
         };
     }

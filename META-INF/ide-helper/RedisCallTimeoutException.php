@@ -2,7 +2,7 @@
 
 namespace Zan\Framework\Store\NoSQL\Exception;
 
-use Zan\Framework\Foundation\Exception\ZanException;
+use ZanPHP\Exception\ZanException;
 
 class RedisCallTimeoutException extends ZanException
 {

@@ -95,6 +95,7 @@ class Redis implements Async
 
         $this->cancelTimeoutTimer();
         call_user_func($this->callback, $ret);
+        $this->callback = null;
     }
 
     public function execute(callable $callback, $task)

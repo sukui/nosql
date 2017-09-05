@@ -81,6 +81,10 @@ class Redis implements Async
     public function recv(/** @noinspection PhpUnusedParameterInspection */
         $client, $ret)
     {
+        if ($this->callback == null) {
+            return;
+        }
+
         if ($this->trace instanceof Trace) {
             $this->trace->commit($this->traceHandle, Constant::SUCCESS);
         }
@@ -163,6 +167,8 @@ class Redis implements Async
                     $this->trace->commit($this->traceHandle, $ex);
                 }
                 $callback(null, $ex);
+
+                $this->callback = null;
             }
         };
     }

@@ -94,8 +94,9 @@ class Redis implements Async
         }
 
         $this->cancelTimeoutTimer();
-        call_user_func($this->callback, $ret);
+        $callback = $this->callback;
         $this->callback = null;
+        call_user_func($callback, $ret);
     }
 
     public function execute(callable $callback, $task)
@@ -163,11 +164,11 @@ class Redis implements Async
                 }
 
                 $callback = $this->callback;
+                $this->callback = null;
                 $ex = new RedisCallTimeoutException("Redis call {$this->cmd} timeout ".var_export($ctx, true), 0, null, $ctx);
                 if ($this->trace instanceof Trace) {
                     $this->trace->commit($this->traceHandle, $ex);
                 }
-                $this->callback = null;
                 $callback(null, $ex);
             }
         };

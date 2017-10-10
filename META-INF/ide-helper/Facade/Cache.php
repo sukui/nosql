@@ -2,202 +2,95 @@
 
 namespace Zan\Framework\Store\Facade;
 
-/**
- * Class Cache
- * @package Zan\Framework\Store\Facade
- *
- * @method static bool del($configKey, $keys)
- */
 class Cache
 {
-
-    const POOL_PREFIX = 'connection.';
-
-    const ACTIVE_CONNECTION_CONTEXT_KEY= 'redis_active_connections';
-
     public static function initConfigMap($configMap)
     {
-        self::$_configMap = $configMap;
+        \ZanPHP\NoSql\Facade\Cache::initConfigMap($configMap);
     }
 
-    /**
-     * 给初始化后的Cache配置追加配置项
-     *
-     * @param string $configKey
-     * @param array $config
-     * @return null
-     */
     public static function appendConfigMapByConfigKey($configKey, array $config)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::appendConfigMapByConfigKey($configKey, $config);
     }
 
-    /**
-     * @param $func
-     * @param $args
-     * @return \Generator|void
-     */
     public static function __callStatic($func, $args)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::__callStatic($func, $args);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @return \Generator|void
-     */
     public static function get($configKey, $keys)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::get($configKey, $keys);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @param string $field
-     * @return \Generator|void
-     */
     public static function hGet($configKey, $keys, $field = '')
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hGet($configKey, $keys, $field);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @param $fields
-     * @return \Generator|void
-     */
     public static function hMGet($configKey, $keys, $fields)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hMGet($configKey, $keys, $fields);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @param string $field
-     * @param string $value
-     * @return \Generator|void
-     */
     public static function hSet($configKey, $keys, $field='', $value='')
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hSet($configKey, $keys, $field, $value);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @param array $kv
-     * @return \Generator|void
-     */
     public static function hMSet($configKey, $keys, array $kv)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hMSet($configKey, $keys, $kv);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @param string $field
-     * @return \Generator|void
-     */
     public static function hExists($configKey, $keys, $field = '')
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hExists($configKey, $keys, $field);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @return \Generator|void
-     */
     public static function hGetAll($configKey, $keys)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hGetAll($configKey, $keys);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @return \Generator|void
-     */
     public static function hKeys($configKey, $keys)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hKeys($configKey, $keys);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @return \Generator|void
-     */
     public static function hDel($configKey, $keys)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::hDel($configKey, $keys);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @param $value
-     * @return \Generator|void
-     */
     public static function set($configKey, $keys, $value)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::set($configKey, $keys, $value);
     }
 
-    /**
-     * @param $configKey
-     * @param $keys
-     * @return \Generator|void
-     */
     public static function incr($configKey, $keys)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::incr($configKey, $keys);
     }
 
-    /**
-     * @param $configKey
-     * @param array $keysArr
-     * @return \Generator|void
-     */
     public static function mGet($configKey, array $keysArr)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::mGet($configKey, $keysArr);
     }
 
-    /**
-     * @param $configKey
-     * @param array $keysArr
-     * @param array $values
-     * @return \Generator|void
-     */
     public static function mSet($configKey, array $keysArr, array $values)
     {
-
+        \ZanPHP\NoSql\Facade\Cache::mSet($configKey, $keysArr, $values);
     }
 
-    /**
-     * @param $connection
-     * @return \Generator
-     * @throws Exception
-     * @throws \Zan\Framework\Foundation\Exception\System\InvalidArgumentException
-     */
     public function getConnection($connection)
     {
-        $conn = (yield ConnectionManager::getInstance()->get($connection));
-        if (!$conn instanceof Connection) {
-            throw new ZanException('Redis get connection error');
-        }
-        yield $this->insertActiveConnectionIntoContext($conn);
-        yield $conn;
+        \ZanPHP\NoSql\Facade\Cache::getConnection($connection);
     }
 
     public static function terminate()
     {
-
+        \ZanPHP\NoSql\Facade\Cache::terminate();
     }
 }

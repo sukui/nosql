@@ -3,9 +3,11 @@
 namespace ZanPHP\NoSql\Facade;
 
 use InvalidArgumentException;
+use ZanPHP\Contracts\Config\Repository;
 use ZanPHP\Contracts\ConnectionPool\Connection;
 use ZanPHP\Contracts\ConnectionPool\ConnectionManager;
 use ZanPHP\Exception\ZanException;
+use ZanPHP\NoSql\LocalCache;
 use ZanPHP\NoSql\Redis;
 use ZanPHP\Support\ObjectArray;
 
@@ -87,6 +89,12 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         $result = (yield $redis->$func($realKey, ...$args));
         
@@ -112,6 +120,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         $result = (yield $redis->get($realKey));
         //gzdecode
@@ -138,6 +151,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         $result = (yield $redis->hGet($realKey, $field));
         $result = self::decode($result);
@@ -159,6 +177,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         $oriFields = $fields;
         $results = (yield $redis->hMGet($realKey, ...$fields));
@@ -187,6 +210,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         $result = (yield $redis->hSet($realKey, $field, $value));
         
@@ -212,6 +240,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
 
         $params = [];
@@ -303,6 +336,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         $result = (yield $redis->hDel($realKey));
 
@@ -325,6 +363,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
         if (is_array($value)) {
             $value = json_encode($value);
@@ -357,6 +400,11 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $realKey = self::getRealKey($config, $keys);
 
         $result = (yield $redis->incr($realKey));
@@ -379,7 +427,6 @@ class Cache
         $conn = (yield $redisObj->getConnection($config['connection']));
 
         $redis = new Redis($conn);
-
         $realKeys = [];
         foreach ($keysArr as $keys) {
             $realKeys[] = self::getRealKey($config, $keys);
@@ -416,7 +463,11 @@ class Cache
         $redisObj = self::init($config['connection']);
         $conn = (yield $redisObj->getConnection($config['connection']));
         $redis = new Redis($conn);
-
+        $repository = make(Repository::class);
+        $localCacheEnabled = $repository->get("server.local_cache.enabled");
+        if ($localCacheEnabled === true) {
+            $redis = new LocalCache($redis, $repository->get("server.local_cache.ttl"));
+        }
         $gz = isset($config['encode']) && $config['encode'] == 'gz';
         $ttl = isset($config['exp']) ? $config['exp'] : 0;
 
@@ -448,7 +499,6 @@ class Cache
             yield false;
             return;
         }
-
         yield $redis->expire($key, $ttl);
     }
 

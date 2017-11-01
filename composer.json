@@ -6,7 +6,9 @@
     "zanphp/container": "dev-master",
     "zanphp/coroutine": "dev-master",
     "zanphp/exception": "dev-master",
-    "zanphp/support": "dev-master",
+    "zanphp/support": "dev-master"
+  },
+  "require-dev": {
     "zanphp/connection-pool": "dev-master",
     "zanphp/spi":"dev-master",
     "zanphp/config":"dev-master",

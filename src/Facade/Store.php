@@ -299,8 +299,7 @@ class Store
         yield $result;
     }
 
-    /*
-    // redis 协议支持有限制
+    // 注意: 后端存储引擎可能对redis 协议支持有限制
     public static function __callStatic($func, $args)
     {
         // @var Connection $conn
@@ -321,7 +320,6 @@ class Store
 
         yield $result;
     }
-    */
 
     private static function expire(KVRedis $redis, $key, $ttl = 0)
     {

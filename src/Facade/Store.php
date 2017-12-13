@@ -169,7 +169,7 @@ class Store
 
         $ttl = isset($conf['exp']) ? $conf['exp'] : 0;
         if($result && $ttl){
-            yield self::expire($redis, $realKey, $ttl, 'hash');
+            yield self::expire($redis, $realKey, $ttl);
         }
 
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -317,10 +317,7 @@ class Store
 
         $ttl = isset($conf['exp']) ? $conf['exp'] : 0;
         if($result && $ttl){
-            $dataType = self::getDataTypeByFuncName($func);
-            if ($dataType != '') {
-                yield self::expire($redis, $realKey, $ttl, $dataType);
-            }
+            yield self::expire($redis, $realKey, $ttl);
         }
 
         yield self::deleteActiveConnectionFromContext($conn);
@@ -329,44 +326,15 @@ class Store
         yield $result;
     }
 
-    private static function getDataTypeByFuncName($func)
-    {
-        $funcMap = [
-            'lPush' => 'list',
-            'rPush' => 'list',
-            'sAdd' => 'set',
-            'zAdd' => 'zset',
-        ];
-        return isset($funcMap[$func]) ? $funcMap[$func] : '';
-    }
-
-    private static function expire(KVRedis $redis, $key, $ttl = 0, $dataType = 'kv')
+    private static function expire(KVRedis $redis, $key, $ttl = 0)
     {
         /* @var Connection $conn */
         if(!$ttl || !$key){
             yield false;
             return;
         }
-        switch ($dataType) {
-            case 'kv' :
-                yield $redis->expire($key, $ttl);
-                break;
-            case 'hash' :
-                yield $redis->hexpire($key, $ttl);
-                break;
-            case 'list' :
-                yield $redis->lexpire($key, $ttl);
-                break;
-            case 'set' :
-                yield $redis->sexpire($key, $ttl);
-                break;
-            case 'zset' :
-                yield $redis->zexpire($key, $ttl);
-                break;
-            default:
-                yield $redis->expire($key, $ttl);
-                break;
-        }
+
+        yield $redis->expire($key, $ttl);
     }
 
     public function getConnection($connection)

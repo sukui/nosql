@@ -315,6 +315,11 @@ class Store
         $realKey = $self->fmtKVKey($conf, $keys);
         $result = (yield $redis->$func($realKey, ...$args));
 
+        $ttl = isset($conf['exp']) ? $conf['exp'] : 0;
+        if($result && $ttl){
+            yield self::expire($redis, $realKey, $ttl);
+        }
+
         yield self::deleteActiveConnectionFromContext($conn);
         $conn->release();
 

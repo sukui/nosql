@@ -168,7 +168,7 @@ class Store
         $result = (yield $redis->hSet($realKey, $bin, $value));
 
         $ttl = isset($conf['exp']) ? $conf['exp'] : 0;
-        if($result && $ttl){
+        if (in_array($result, [0, 1]) && $ttl) {
             yield self::expire($redis, $realKey, $ttl, 'hash');
         }
 

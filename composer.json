@@ -1,11 +1,5 @@
 {
   "name": "zanphp/nosql",
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "http://packagist.qima-inc.com"
-    }
-  },
   "require": {
     "php": ">=5.6",
     "zanphp/contracts": "dev-master",
@@ -14,9 +8,20 @@
     "zanphp/exception": "dev-master",
     "zanphp/support": "dev-master"
   },
+  "require-dev": {
+    "zanphp/connection-pool": "dev-master",
+    "zanphp/spi":"dev-master",
+    "zanphp/config":"dev-master",
+    "zanphp/testing": "dev-master"
+  },
   "autoload": {
     "psr-4": {
-      "ZanPHP\\NoSql\\": "src/"
+      "ZanPHP\\NoSql\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ZanPHP\\NoSql\\Tests\\": "tests"
     }
   },
   "extra": {

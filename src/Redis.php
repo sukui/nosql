@@ -85,8 +85,14 @@ class Redis implements Async
             return;
         }
 
+        $commitStatus = Constant::SUCCESS;
+        if ($client->errCode !== 0) {
+            $ex = new RedisCallFailedException($client->errMsg, $client->errCode);
+            $commitStatus = $ex;
+        }
+
         if ($this->trace instanceof Trace) {
-            $this->trace->commit($this->traceHandle, Constant::SUCCESS);
+            $this->trace->commit($this->traceHandle, $commitStatus);
         }
 
         if ($this->debuggerTrace instanceof Tracer) {
@@ -96,7 +102,12 @@ class Redis implements Async
         $this->cancelTimeoutTimer();
         $callback = $this->callback;
         $this->callback = null;
-        call_user_func($callback, $ret);
+
+        if (isset($ex)) {
+            call_user_func($callback, null, $ex);
+        } else {
+            call_user_func($callback, $ret);
+        }
     }
 
     public function execute(callable $callback, $task)
